@@ -1,0 +1,63 @@
+<?php
+
+namespace app\models;
+
+use Yii;
+
+/**
+ * This is the model class for table "user".
+ *
+ * @property int $id
+ * @property string $login
+ * @property string $password
+ * @property string $name
+ * @property string $email
+ * @property string $role
+ */
+class RegForm extends User
+{
+    public $password_confirm;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function tableName()
+    {
+        return 'user';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules()
+    {
+        return [
+            [['login', 'name', 'email', 'password', 'password_confirm'], 'required', 'message' => 'Поле обязательно для заполнения'],
+            [['login', 'name', 'email', 'password', 'password_confirm'], 'string'],
+            [['email'], 'unique', 'message' => 'Email уже используется'],
+            [['password_confirm'], 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
+            [['password_confirm'], 'safe'],
+            [['login', 'password'], 'string', 'max' => 20],
+            [['name'], 'string', 'max' => 150],
+            [['email'], 'string', 'max' => 50],
+            ['email', 'email', 'message' => 'Email некорректен'],
+            [['name'], 'match', 'pattern' => '/^[А-Яа-я\s]{4,}$/u', 'message' => 'Только кириллица']
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'login' => 'Логин',
+            'password' => 'Пароль',
+            'password_confirm' => 'Подтверждение пароля',
+            'name' => 'Имя',
+            'email' => 'Email',
+            'role' => 'Роль',
+        ];
+    }
+}
